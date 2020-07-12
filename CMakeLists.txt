@@ -13,5 +13,5 @@ set(GLEW_LIBRARY "/usr/local/lib/libGLEW.a;/usr/local/lib/libGLEW.dylib")
 message("${GLEW_LIBRARY}")
 set(LINK_LIBS ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY})
 
-add_executable(opengl_shaders main.cpp)
+add_executable(opengl_shaders main.cpp matrix.cpp matrix.h)
 target_link_libraries(opengl_shaders ${LINK_LIBS})
