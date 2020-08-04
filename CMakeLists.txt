@@ -14,4 +14,5 @@ message("${GLEW_LIBRARY}")
 set(LINK_LIBS ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARY})
 
 add_subdirectory(01point)
+add_subdirectory(02cube)
 add_subdirectory(03cubes)

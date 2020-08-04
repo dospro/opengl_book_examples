@@ -14,9 +14,9 @@ const int HEIGHT = 600;
 const int numVAOs = 1;
 
 
-class CubeApp : public SDLApp {
+class PointApp : public SDLApp {
 public:
-    CubeApp(int width, int height);
+    PointApp(int width, int height);
     std::string load_shader(const std::string &filename);
     GLuint createShaderProgram();
 
@@ -28,11 +28,11 @@ private:
     GLuint vao[numVAOs];
 };
 
-CubeApp::CubeApp(int width, int height) : SDLApp(width, height) {
+PointApp::PointApp(int width, int height) : SDLApp(width, height) {
     init();
 }
 
-std::string CubeApp::load_shader(const std::string &filename) {
+std::string PointApp::load_shader(const std::string &filename) {
     std::ifstream in(filename, std::ios::in | std::ios::binary);
     if (in) {
         std::ostringstream contents;
@@ -43,7 +43,7 @@ std::string CubeApp::load_shader(const std::string &filename) {
     throw(errno);
 }
 
-GLuint CubeApp::createShaderProgram() {
+GLuint PointApp::createShaderProgram() {
     GLint vertCompiled;
     GLint fragCompiled;
     GLint linked;
@@ -88,13 +88,13 @@ GLuint CubeApp::createShaderProgram() {
     return vfProgram;
 }
 
-void CubeApp::init() {
+void PointApp::init() {
     renderingProgram = createShaderProgram();
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
 }
 
-void CubeApp::update(double delta_time) {
+void PointApp::update(double delta_time) {
     glClearColor(1.0, 1.0, 1.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -104,7 +104,7 @@ void CubeApp::update(double delta_time) {
 }
 
 int main() {
-    auto *app = new CubeApp(WIDTH, HEIGHT);
+    auto *app = new PointApp(WIDTH, HEIGHT);
     app->run();
     delete app;
     return 0;

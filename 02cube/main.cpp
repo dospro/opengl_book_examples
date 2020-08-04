@@ -13,9 +13,9 @@
 const int numVAOs = 1;
 const int numVBOs = 2;
 
-class CubesApp : public SDLApp {
+class CubeApp : public SDLApp {
 public:
-    CubesApp(int width, int height);
+    CubeApp(int width, int height);
     void setup_vertices();
     std::string load_shader(const std::string &filename);
     GLuint createShaderProgram();
@@ -28,19 +28,19 @@ private:
     GLuint vao[numVAOs];
     GLuint vbo[numVBOs];
 
-    GLuint v_loc, proj_loc;
+    GLuint mv_loc, proj_loc;
     float aspect;
-    float counter;
+    float tx, ty, tz;
 
     Matrix p_mat, v_mat, m_mat, mv_mat, t_mat, r_mat;
 };
 
-CubesApp::CubesApp(int width, int height) : SDLApp(width, height) {
+CubeApp::CubeApp(int width, int height) : SDLApp(width, height) {
     init();
 }
 
 
-void CubesApp::setup_vertices() {
+void CubeApp::setup_vertices() {
     // clang-format off
     float vertex_positions[108] = {
             -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -61,7 +61,7 @@ void CubesApp::setup_vertices() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_positions), vertex_positions, GL_STATIC_DRAW);
 }
 
-std::string CubesApp::load_shader(const std::string &filename) {
+std::string CubeApp::load_shader(const std::string &filename) {
     std::ifstream in(filename, std::ios::in | std::ios::binary);
     if (in) {
         std::ostringstream contents;
@@ -73,7 +73,7 @@ std::string CubesApp::load_shader(const std::string &filename) {
 }
 
 
-GLuint CubesApp::createShaderProgram() {
+GLuint CubeApp::createShaderProgram() {
     GLint vertCompiled;
     GLint fragCompiled;
     GLint linked;
@@ -117,44 +117,53 @@ GLuint CubesApp::createShaderProgram() {
     }
     return vfProgram;
 }
-
-void CubesApp::init() {
+void CubeApp::init() {
     renderingProgram = createShaderProgram();
     setup_vertices();
 
-    v_mat = Matrix::make_translate(0.0, 0.0, -24.0);
+    v_mat = Matrix::make_translate(0.0, 0.0, -8.0);
     t_mat = Matrix::make_identity();
     r_mat = Matrix::make_identity();
-    counter = 0.0;
+    tx = 0.0;
+    ty = 0.0;
+    tz = 0.0;
 
     aspect = (float) width / (float) height;
     p_mat = Matrix::make_perspective(1.0472, aspect, 0.1f, 1000.0f);
 }
-void CubesApp::update(double delta_time) {
+void CubeApp::update(double delta_time) {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(renderingProgram);
 
-    v_loc = glGetUniformLocation(renderingProgram, "v_matrix");
-    glUniformMatrix4fv(v_loc, 1, GL_TRUE, v_mat.getData());
-
+    mv_loc = glGetUniformLocation(renderingProgram, "mv_matrix");
     proj_loc = glGetUniformLocation(renderingProgram, "proj_matrix");
+    tx += 0.35 * delta_time;
+    ty += 0.52 * delta_time;
+    tz += 0.7 * delta_time;
+
+    t_mat = Matrix::make_translate(2.0 * sin(tx), 2.0 * sin(ty), 2.0 * sin(tz));
+    r_mat = r_mat * Matrix::make_rotate_y(1.75 * delta_time);
+    r_mat = r_mat * Matrix::make_rotate_x(1.75 * delta_time);
+    r_mat = r_mat * Matrix::make_rotate_z(1.75 * delta_time);
+    m_mat = t_mat * r_mat;
+
+    mv_mat = v_mat * m_mat;
+
+    glUniformMatrix4fv(mv_loc, 1, GL_TRUE, mv_mat.getData());
     glUniformMatrix4fv(proj_loc, 1, GL_TRUE, p_mat.getData());
 
-    counter += delta_time;
-    GLuint tf_loc = glGetUniformLocation(renderingProgram, "tf");
-    glUniform1f(tf_loc, (float) counter);
-
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 int main() {
-    auto *app = new CubesApp(600, 600);
+    auto *app = new CubeApp(600, 600);
     app->run();
     return 0;
 }
