@@ -6,9 +6,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "error_handlerss.h"
-#include "matrix.h"
-#include "sdl_app.h"
+#include "../common/error_handler.h"
+#include "../common/matrix.h"
+#include "../common/sdl_app.h"
 
 const int numVAOs = 1;
 const int numVBOs = 2;
@@ -142,7 +142,7 @@ void CubeApp::update(double delta_time) {
     glUniformMatrix4fv(proj_loc, 1, GL_TRUE, p_mat.getData());
 
     counter += delta_time;
-    GLuint  tf_loc = glGetUniformLocation(renderingProgram, "tf");
+    GLuint tf_loc = glGetUniformLocation(renderingProgram, "tf");
     glUniform1f(tf_loc, (float) counter);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -151,7 +151,6 @@ void CubeApp::update(double delta_time) {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
-
 }
 
 int main() {
