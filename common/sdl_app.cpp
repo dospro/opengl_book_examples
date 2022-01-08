@@ -36,6 +36,13 @@ void SDLApp::run() {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT: is_running = false; break;
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                        is_running = false;
+                        break;
+                    }
+                default:
+                    break;
             }
         }
         double delta_time = ((double) SDL_GetTicks() - timestamp) / 1000.0;
