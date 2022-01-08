@@ -9,6 +9,7 @@ public:
     virtual ~SDLApp();
     virtual void init() = 0;
     virtual void update(double delta_time) = 0;
+    virtual void onKeyPress(unsigned int scancode);
     void run();
 
 protected:

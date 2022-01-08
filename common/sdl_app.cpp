@@ -25,6 +25,7 @@ SDLApp::SDLApp(int width, int height) {
     this->width = width;
     this->height = height;
 }
+
 SDLApp::~SDLApp() {
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
@@ -35,12 +36,16 @@ void SDLApp::run() {
     while (is_running) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
-                case SDL_QUIT: is_running = false; break;
+                case SDL_QUIT:
+                    is_running = false;
+                    break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                         is_running = false;
                         break;
                     }
+                    onKeyPress(event.key.keysym.scancode);
+                    break;
                 default:
                     break;
             }
@@ -50,4 +55,8 @@ void SDLApp::run() {
         update(delta_time);
         SDL_GL_SwapWindow(window);
     }
+}
+
+void SDLApp::onKeyPress(unsigned int scancode) {
+    ;//Do nothing
 }
