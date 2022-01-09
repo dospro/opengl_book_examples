@@ -209,7 +209,7 @@ void MatrixStacks::update(double delta_time) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    //m_stack.pop(); // Sacamos el translate de la luna
+    m_stack.pop(); // Sacamos el translate de la luna
     m_stack.pop(); // Sacamos el translate del planeta
     m_stack.pop(); // Sacamos el translate del sol
     m_stack.pop(); // Sacamos el view
