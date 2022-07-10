@@ -4,6 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${opengl_shaders_SOURCE_DIR}/cmake/M
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
@@ -22,3 +23,4 @@ add_subdirectory(03cubes)
 add_subdirectory(04pyramid)
 add_subdirectory(041moving_camera)
 add_subdirectory(042matrix_stacks)
+add_subdirectory(05textures)
